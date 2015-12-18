@@ -427,7 +427,7 @@
                                             <input type="checkbox" data-bind="checked: checked"/>
                                         </td>
                                         <td>
-                                            <span data-bind="text: originalName"></span>
+                                            <input data-bind="value: originalName"/>
                                         </td>
                                         <td><input data-bind="value: chosenName"/></td>
                                         <td><i class="icon-wrench" data-bind="click: toggleSettingsRowVisibility"></i></td>
@@ -449,9 +449,13 @@
                                                     
                                                     </td>                                                    
                                                 </tr>
-                                                <tr>
+                                                <tr data-bind="visible: isSettingMissingRowVisible">
                                                     <td>Missing Value <span href="#" data-toggle="tooltip" data-placement="bottom" title="You can provide value that denotes missing value for the variable"> <i class="icon-info-sign"></i></span>: <input data-bind="value: missingValue"/></td>
-                                                    <td></td>
+                                                    <td><input type="checkbox" data-bind="checked: isConstant, visible: isConstantVisible"></td>
+                                                </tr>
+                                                <tr data-bind="visible: isSettingConstantRowVisible">
+                                                    <td>Constant Value <span href="#" data-toggle="tooltip" data-placement="bottom" title="You can provide value that will be the constant value for the variable added"> <i class="icon-info-sign"></i></span>: <input data-bind="value: constantValue"/></td>
+                                                    <td><input type="checkbox" data-bind="checked: isConstant, visible: isConstantVisible"></td>
                                                 </tr>
                                                 <tr>
                                                     <td colspan="2">
@@ -462,7 +466,11 @@
                                             </table>
                                         </td>
                                     </tr>    
-                                </tbody>                    
+                                </tbody> 
+                                 <tr>
+                                        <td>  <button type='button' name='Submit' id='addVariableBtn' class='btn btn-primary' data-bind='click: addConstant'>Add Constant Column</button>
+                                        </td>
+                                </tr>                   
                             </table>
                         </div>
                     </div>

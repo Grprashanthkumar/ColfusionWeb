@@ -28,8 +28,10 @@ var variableDataTypes = [
 
 
 var WizardVariableViewModel = function(originalName, chosenName, description, variableMeasuringUnit, variableValueType,
-    variableValueFormat, missingValue) {
+    variableValueFormat, missingValue, constantValue) {
 
+    //var constantValue="asdfasdf";
+   // var isConstant = false;
     self = this;
 
     self.originalName = ko.observable(originalName);
@@ -42,9 +44,18 @@ var WizardVariableViewModel = function(originalName, chosenName, description, va
     self.variableValueFormat = ko.observable(variableValueFormat);
 
     self.missingValue = ko.observable(missingValue);
+    self.constantValue = ko.observable(constantValue);
+
+    self.isConstant = ko.observable(false);
+    self.isConstantVisible = ko.observable(false);
 
     self.checked = ko.observable(true);
     self.isSettingRowVisible = ko.observable(false);
+
+
+    self.isSettingConstantRowVisible = ko.observable(false);
+    self.isSettingMissingRowVisible = ko.observable(true);
+   
 
     self.toggleSettingsRowVisibility = function(item) {
         item.isSettingRowVisible(!item.isSettingRowVisible());
@@ -62,6 +73,16 @@ var WizardWorksheetViewModel = function(sheetName, headerRow, startColumn, numbe
     self.variables = ko.observableArray(variables);
 
     self.allToggled = ko.observable(false);
+
+    self.addConstant = function(data,event) {
+
+        this.variables.push(new WizardVariableViewModel());
+        var currentSelectedRow = this.variables().length-1;
+        this.variables()[currentSelectedRow].isSettingConstantRowVisible(!this.variables()[currentSelectedRow].isSettingConstantRowVisible());
+        this.variables()[currentSelectedRow].isSettingMissingRowVisible(!this.variables()[currentSelectedRow].isSettingMissingRowVisible());
+        this.variables()[currentSelectedRow].isConstant = true;
+        
+    };
 
     self.toggleAll = function(wsheet) {
 
@@ -166,7 +187,7 @@ function WizardDataMatchingStepViewModel(sid, userId) {
                                 }
 
                                 var wizardVariable = new WizardVariableViewModel(variable.originalName, variable.chosenName,
-                                    variable.description, variable.variableMeasuringUnit, dataType, variable.variableValueFormat, variable.missingValue);
+                                    variable.description, variable.variableMeasuringUnit, dataType, variable.variableValueFormat, variable.missingValue, variable.constantValue);
 
                                 wizardVariables.push(wizardVariable);
                             }
@@ -223,14 +244,16 @@ function WizardDataMatchingStepViewModel(sid, userId) {
                                 variableValueFormat: variable.variableValueFormat,
                                 variableValueType: variable.variableValueType.name,
                                 variableMeasuringUnit: variable.variableMeasuringUnit,
-                                missingValue : variable.missingValue
+                                missingValue : variable.missingValue,
+                                constantValue: variable.constantValue,
+                                isConstant : variable.isConstant
                             };
                         })
                     };
                 })
             };
         });
-
+        
         var data = {
             sid : self.sid,
             userId : self.userId,
